@@ -7,29 +7,29 @@
     <form method="POST" action="/listings" class="  needs-validation" novalidate  >
      <div class="mb-3">
         <label for="title" class="form-label"  >Enter title:- </label>
-     <input   id="title"  name="title" placeholder="enter title" type="text" class="form-control" required  >
+     <input   id="title"  name="listing[title]" placeholder="enter title" type="text" class="form-control" required  >
      <div class="valid-feedback">Title Looks good</div>
    </div>
      <div class="mb-3">
       <label   for="descriotion" class="form-label"  >Enter description :- </label>
-     <input  id="description" name="description" placeholder="enter description " type="text" class="form-control" required>
+     <input  id="description" name="listing[description]" placeholder="enter description " type="text" class="form-control" required>
      </div>
 
      <div class="mb-3">
       <label for="image" class="form-label"  >Enter image url :- </label>
-     <input id="image"  name="image" placeholder="enter image" type="text" class="form-control" required   >
+     <input id="image"  name="listing[image]" placeholder="enter image" type="text" class="form-control" required   >
      </div>
      
      <div class="row" >
          <div class="mb-3 col-md-4"  >
    <label for="price" class="form-label">Enter Price:- </label>
-     <input  id="price"  name="price" placeholder="entet price"   class="form-control" required >
+     <input  id="price"  name="listing[price]" placeholder="entet price"   class="form-control" required >
    <div class="in-valid-feedback">Enter a valid price</div>
    </div>
        
   <div class="mb-3   col-md-8" >
      <label for="country" class="form-label" >Enter country:- </label>
-     <input  id="country" name="country" placeholder="enter country" type=" text"  class="form-control" required > 
+     <input  id="country" name="listing[country]" placeholder="enter country" type=" text"  class="form-control" required > 
      <div class="in-valid-feedback">country name should be valid </div>
    </div>
 
@@ -38,7 +38,7 @@
  
      <div class="mb-3">
            <label for="location" class="form-label">Enter Location:- </label>
-     <input   id="location"  name="location" placeholder="enter Location" type=" text"  class="form-control" required >
+     <input   id="location"  name="listing[location]" placeholder="enter Location" type=" text"  class="form-control" required >
         <div class="in-valid-feedback">Location should be valid </div>
      </div>
    

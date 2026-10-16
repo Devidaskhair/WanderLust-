@@ -8,8 +8,10 @@ const methodOverride = require("method-override");
 const wrapAsync=require("./utils/wrapAsync.js");
 const ExpressError=require("./utils/ExpressError.js");
 const {listingSchema,ReviewSchema}=require("./schema.js");
-const Review = require("./models/review.js");
+const Review = require("./routes/review.js");
+const session=require("express-session");
 const listings=require("./routes/listing.js");
+const reviews=require("./routes/review.js");
 
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"));
@@ -20,7 +22,14 @@ app.use(express.static(path.join(__dirname,"/public")));
 app.listen(4000,()=>{
     console.log("server is running on port 3000");
 });
-app.use("/listings",listings);
+
+const sessionOptions={
+    secret:"Superkey",
+    resave:false,
+    saveUninitialized:true,
+}
+app.use(session(sessionOptions));
+
 
 const MONGO_URL='mongodb://127.0.0.1:27017/wanderlust';
 async function main(){
@@ -35,40 +44,9 @@ main().then(()=>{
 
 
 
-const validateReview=(req,res,next)=>{
-    const {error}=ReviewSchema.validate(req.body);
-    if(error){
-        let  errmsg=error.details.map(el=>el.message).join(",");
-        throw new ExpressError(400,errmsg);
-    }else{
-        next();
-    }
-}; 
+app.use("/listings",listings);
+app.use("/listings/:id/reviews",reviews);
 
-
-
-// Reviews
-// post route
-app.post("/:id/reviews",validateReview,wrapAsync(async(req,res)=>{
-
-let listing=await Listing.findById(req.params.id);
-let newReview= new Review(req.body.review);
-listing.reviews.push(newReview);
-await newReview.save();
-await listing.save();
-console.log("review added successfully",newReview);
-res.redirect(`/${listing._id}`)
-})
-);
-
-//delete review route
-app.delete("/:id/reviews/:reviewId",wrapAsync(async(req,res)=>{
-let {id,reviewId}=req.params;
- await Listing.findByIdAndUpdate(id,{$pull:{reviews:reviewId}});
- await Review.findByIdAndDelete(reviewId);
- res.redirect(`/listings/${id}`);
-})
-);
 
 app.all("/{*splat}", (req, res, next) => {
         console.log("404 URL:", req.method, req.originalUrl);
@@ -82,3 +60,4 @@ app.use((err,req,res,next)=>{
   res.status(statusCode).render("error.ejs", { msg, statusCode });
 
 });
+

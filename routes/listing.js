@@ -15,6 +15,7 @@ const validateListing=(req,res,next)=>{
         next();
     }
 };  
+
 //Index Route
 router.get("/", wrapAsync(async (req,res)=>{
  const allListings=await Listing.find({});
@@ -37,23 +38,10 @@ router.get("/:id",wrapAsync(async(req,res)=>{
 }));
 
 //Create Route
-router.post("/listings",
+router.post("/",
     validateListing,
     wrapAsync(async(req,res)=>{
-  let {error} = listingSchema.validate(req.body);
-  if(error){
-      throw new ExpressError(400,error);
-  }else{
-      next();
-  }
-  let listingData =new Listing( {
-      title,
-      description, 
-      image,
-      price,
-      country,
-      location
-  });
+  let listingData = new Listing(req.body.listing);
   
   await listingData.save();
   res.redirect("/listings");
@@ -68,13 +56,13 @@ router.post("/listings",
       res.render("listings/edit.ejs",{listing});
   }));
   
-
+  
   //Update Route
   router.put("/:id",
       validateListing,
       wrapAsync(async (req,res)=>{
       let {id}=req.params;
-      await Listing.findByIdAndUpdate(id,{...req.body});
+      await Listing.findByIdAndUpdate(id,{...req.body.listing},{runValidators:true});
       res.redirect("/listings");
   
   }));
@@ -88,4 +76,7 @@ router.post("/listings",
       res.redirect("/listings");
   
   }));
+
+
+
   module.exports = router;
