@@ -1,5 +1,6 @@
 const mongoose=require("mongoose");
 const schema=mongoose.Schema;
+const passportLocalMongoose=require("passport-local-mongoose").default;
 const ReviewSchema=new schema({
     comment:String,
     rating:Number,
